@@ -141,7 +141,15 @@ jobs:
         shell: bash
         run: |
           cd $GITHUB_WORKSPACE/device_kernel
-
+          
+          if [ ! -f ./toolchain/mkdtimg ]; then
+            echo "--- Downloading mkdtimg ---"
+            wget -q https://github.com/LineageOS/android_prebuilts_tools-lineage/raw/lineage-20/linux-x86/dtc/mkdtimg \
+            -O ./toolchain/mkdtimg
+            chmod +x ./toolchain/mkdtimg
+            echo "✅ mkdtimg ready"
+          fi
+          
           # Var
           TIME=$(date +"%Y%m%d%H%M%S")
           KERNEL_PATH=build/out/a04/Image
