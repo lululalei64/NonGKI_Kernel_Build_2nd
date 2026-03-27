@@ -10,7 +10,7 @@ env:
   DEVICE_CODENAME : "a04"
 
   CUSTOM_CMDS : "CLANG_TRIPLE=aarch64-linux-gnu-"
-  EXTRA_CMDS : "LLVM=1 LLVM_IAS=1"
+  EXTRA_CMDS : "LLVM=1 LLVM_IAS=1 KCFLAGS='-w -Wno-error'"
 
   KERNEL_SOURCE : "https://github.com/lululalei64/kernel_samsung_wingtech"
   KERNEL_BRANCH : "android-4.19-stable"
@@ -127,6 +127,7 @@ jobs:
           sed -i 's/strncpy_from_unsafe_user/strncpy_from_unsafe/g' kernel/trace/bpf_trace.c
           sed -i 's/void try_schedule_zs_compact()/void try_schedule_zs_compact(void)/g' mm/zsmalloc.c
           sed -i 's/pages_freed=%d/pages_freed=%lu/g' mm/zsmalloc.c
+          sed -i 's/const SIPA_PARAM \*sipa_param_instance()/const SIPA_PARAM *sipa_param_instance(void)/g' sound/soc/codecs/sia8159/sipa_parameter.c
           sed -i 's/KBUILD_CFLAGS += -Werror/# KBUILD_CFLAGS += -Werror/g' Makefile || true
 
       - name: 🧰 Patch Kernel of Re:Kernel
