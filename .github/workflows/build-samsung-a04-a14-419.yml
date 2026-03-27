@@ -142,6 +142,24 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/device_kernel
           
+          mkdir -p ./toolchain
+          
+          if [ ! -f ./toolchain/mkdtimg ]; then
+            echo "--- Downloading mkdtimg ---"
+            wget -q https://github.com/LineageOS/android_prebuilts_tools-lineage/raw/lineage-20/linux-x86/dtc/mkdtimg \
+            -O ./toolchain/mkdtimg
+          
+            if [ $? -ne 0 ]; then
+              echo "❌ Download failed! Check your URL or network."
+              exit 1
+            fi
+          
+            chmod +x ./toolchain/mkdtimg
+            echo "✅ mkdtimg ready"
+          fi
+          
+          ls -l ./toolchain/mkdtimg
+  
           # Var
           TIME=$(date +"%Y%m%d%H%M%S")
           KERNEL_PATH=build/out/a04/Image
