@@ -10,7 +10,7 @@ env:
   DEVICE_CODENAME : "a04"
 
   CUSTOM_CMDS : "CLANG_TRIPLE=aarch64-linux-gnu-"
-  EXTRA_CMDS : "LLVM=1 LLVM_IAS=1 W=0"
+  EXTRA_CMDS : "LLVM=1 LLVM_IAS=1"
 
   KERNEL_SOURCE : "https://github.com/lululalei64/kernel_samsung_wingtech"
   KERNEL_BRANCH : "android-4.19-stable"
@@ -120,7 +120,7 @@ jobs:
           # Only ${{ env.DEVICE_NAME }} use it.
           cd $GITHUB_WORKSPACE/device_kernel
           sed -i 's/strncpy_from_unsafe_user/strncpy_from_unsafe/g' kernel/trace/bpf_trace.c
-          /scripts/config --file arch/arm64/configs/${{ env.DEFCONFIG_NAME }} -e CONFIG_CC_WERROR_DISABLED || true
+          ./scripts/config --file arch/arm64/configs/${{ env.DEFCONFIG_NAME }} -e CONFIG_CC_WERROR_DISABLED || true
           # Nothing
 
       - name: 🧰 Patch Kernel of Re:Kernel
