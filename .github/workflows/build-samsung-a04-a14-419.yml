@@ -119,9 +119,15 @@ jobs:
         run: |
           # Only ${{ env.DEVICE_NAME }} use it.
           cd $GITHUB_WORKSPACE/device_kernel
+          
+          echo "CONFIG_CC_WERROR=n" >> arch/arm64/configs/${{ env.DEFCONFIG_NAME }}
+          echo "--- Checking CONFIG_CC_WERROR in defconfig ---"
+          grep "CONFIG_CC_WERROR" arch/arm64/configs/${{ env.DEFCONFIG_NAME }} && echo "✅ Found" || echo "❌ Not found"
+          
           sed -i 's/strncpy_from_unsafe_user/strncpy_from_unsafe/g' kernel/trace/bpf_trace.c
-          ./scripts/config --file arch/arm64/configs/${{ env.DEFCONFIG_NAME }} -e CONFIG_CC_WERROR_DISABLED || true
-          # Nothing
+          sed -i 's/void try_schedule_zs_compact()/void try_schedule_zs_compact(void)/g' mm/zsmalloc.c
+          sed -i 's/pages_freed=%d/pages_freed=%lu/g' mm/zsmalloc.c
+          sed -i 's/KBUILD_CFLAGS += -Werror/# KBUILD_CFLAGS += -Werror/g' Makefile || true
 
       - name: 🧰 Patch Kernel of Re:Kernel
         uses: ./.github/workflows/patch-rekernel
