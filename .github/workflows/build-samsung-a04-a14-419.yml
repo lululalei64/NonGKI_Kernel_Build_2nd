@@ -119,6 +119,11 @@ jobs:
         run: |
           # Only ${{ env.DEVICE_NAME }} use it.
           cd $GITHUB_WORKSPACE/device_kernel
+          echo "--- before patch ---"
+          grep -n "strncpy_from_unsafe" kernel/trace/bpf_trace.c
+          sed -i 's/strncpy_from_unsafe_user/strncpy_from_unsafe/g' kernel/trace/bpf_trace.c
+          echo "--- after patch ---"
+          grep -n "strncpy_from_unsafe" kernel/trace/bpf_trace.c
 
       - name: 🧰 Patch Kernel of Re:Kernel
         uses: ./.github/workflows/patch-rekernel
